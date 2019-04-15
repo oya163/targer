@@ -17,42 +17,42 @@ from src.seq_indexers.seq_indexer_word import SeqIndexerWord
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Learning tagger using neural networks')
-    parser.add_argument('--train', default='data/NER/CoNNL_2003_shared_task/train.txt',
+    parser.add_argument('--train', default='../oya-nepali-nlp/data/ner/combined/after_stemming/train.tsv',
                         help='Train data in format defined by --data-io param.')
-    parser.add_argument('--dev', default='data/NER/CoNNL_2003_shared_task/dev.txt',
+    parser.add_argument('--dev', default='../oya-nepali-nlp/data/ner/combined/after_stemming/val.tsv',
                         help='Development data in format defined by --data-io param.')
-    parser.add_argument('--test', default='data/NER/CoNNL_2003_shared_task/test.txt',
+    parser.add_argument('--test', default='../oya-nepali-nlp/data/ner/combined/after_stemming/test.tsv',
                         help='Test data in format defined by --data-io param.')
     parser.add_argument('-d', '--data-io', choices=['connl-ner-2003', 'connl-pe', 'connl-wd'],
                         default='connl-ner-2003', help='Data read/write file format.')
     parser.add_argument('--gpu', type=int, default=0, help='GPU device number, -1  means CPU.')
     parser.add_argument('--model', help='Tagger model.', choices=['BiRNN', 'BiRNNCNN', 'BiRNNCRF', 'BiRNNCNNCRF'],
-                        default='BiRNNCNNCRF')
+                        default='BiRNN')
     parser.add_argument('--load', '-l', default=None, help='Path to load from the trained model.')
-    parser.add_argument('--save', '-s', default='%s_tagger.hdf5' % get_datetime_str(),
+    parser.add_argument('--save', '-s', default='nepali_ner_%s_tagger.hdf5' % get_datetime_str(),
                         help='Path to save the trained model.')
     parser.add_argument('--word-seq-indexer', '-w', type=str, default=None,
                         help='Load word_seq_indexer object from hdf5 file.')
-    parser.add_argument('--epoch-num', '-e',  type=int, default=100, help='Number of epochs.')
-    parser.add_argument('--min-epoch-num', '-n', type=int, default=50, help='Minimum number of epochs.')
+    parser.add_argument('--epoch-num', '-e',  type=int, default=30, help='Number of epochs.')
+    parser.add_argument('--min-epoch-num', '-n', type=int, default=10, help='Minimum number of epochs.')
     parser.add_argument('--patience', '-p', type=int, default=15, help='Patience for early stopping.')
     parser.add_argument('--evaluator', '-v', default='f1-connl', help='Evaluation method.',
                         choices=['f1-connl', 'f1-alpha-match-10', 'f1-alpha-match-05', 'f1-macro', 'token-acc'])
     parser.add_argument('--save-best', type=str2bool, default=True, help = 'Save best on dev model as a final model.',
                         nargs='?', choices=['yes', True, 'no (default)', False])
     parser.add_argument('--dropout-ratio', '-r', type=float, default=0.5, help='Dropout ratio.')
-    parser.add_argument('--batch-size', '-b', type=int, default=10, help='Batch size, samples.')
-    parser.add_argument('--opt', '-o', help='Optimization method.', choices=['sgd', 'adam'], default='sgd')
+    parser.add_argument('--batch-size', '-b', type=int, default=32, help='Batch size, samples.')
+    parser.add_argument('--opt', '-o', help='Optimization method.', choices=['sgd', 'adam'], default='adam')
     parser.add_argument('--lr', type=float, default=0.01, help='Learning rate.')
-    parser.add_argument('--lr-decay', type=float, default=0.05, help='Learning decay rate.')
+    parser.add_argument('--lr-decay', type=float, default=0.0000001, help='Learning decay rate.')
     parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Learning momentum rate.')
     parser.add_argument('--clip-grad', type=float, default=5, help='Clipping gradients maximum L2 norm.')
     parser.add_argument('--rnn-type', help='RNN cell units type.', choices=['Vanilla', 'LSTM', 'GRU'], default='LSTM')
-    parser.add_argument('--rnn-hidden-dim', type=int, default=100, help='Number hidden units in the recurrent layer.')
-    parser.add_argument('--emb-fn', default='embeddings/glove.6B.100d.txt', help='Path to word embeddings file.')
-    parser.add_argument('--emb-dim', type=int, default=100, help='Dimension of word embeddings file.')
+    parser.add_argument('--rnn-hidden-dim', type=int, default=64, help='Number hidden units in the recurrent layer.')
+    parser.add_argument('--emb-fn', default='../oya-nepali-nlp/data/nep2vec/nep2vec_text_stem', help='Path to word embeddings file.')
+    parser.add_argument('--emb-dim', type=int, default=300, help='Dimension of word embeddings file.')
     parser.add_argument('--emb-delimiter', default=' ', help='Delimiter for word embeddings file.')
-    parser.add_argument('--emb-load-all', type=str2bool, default=False, help='Load all embeddings to model.', nargs='?',
+    parser.add_argument('--emb-load-all', type=str2bool, default=True, help='Load all embeddings to model.', nargs='?',
                         choices = ['yes', True, 'no (default)', False])
     parser.add_argument('--freeze-word-embeddings', type=str2bool, default=False,
                         help='False to continue training the word embeddings.', nargs='?',
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     parser.add_argument('--word-len', type=int, default=20, help='Max length of words in characters for char CNNs.')
     parser.add_argument('--dataset-sort', type=str2bool, default=False, help='Sort sequences by length for training.',
                         nargs='?', choices=['yes', True, 'no (default)', False])
-    parser.add_argument('--seed-num', type=int, default=42, help='Random seed number, note that 42 is the answer.')
+    parser.add_argument('--seed-num', type=int, default=63, help='Random seed number, note that 42 is the answer.')
     parser.add_argument('--report-fn', type=str, default='%s_report.txt' % get_datetime_str(), help='Report filename.')
     parser.add_argument('--cross-folds-num', type=int, default=-1,
                         help='Number of folds for cross-validation (optional, for some datasets).')
