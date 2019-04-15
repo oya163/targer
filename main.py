@@ -44,7 +44,7 @@ if __name__ == "__main__":
     parser.add_argument('--batch-size', '-b', type=int, default=32, help='Batch size, samples.')
     parser.add_argument('--opt', '-o', help='Optimization method.', choices=['sgd', 'adam'], default='adam')
     parser.add_argument('--lr', type=float, default=0.01, help='Learning rate.')
-    parser.add_argument('--lr-decay', type=float, default=0.0000001, help='Learning decay rate.')
+    parser.add_argument('--lr-decay', type=float, default=0.01, help='Learning decay rate.')
     parser.add_argument('--momentum', '-m', type=float, default=0.9, help='Learning momentum rate.')
     parser.add_argument('--clip-grad', type=float, default=5, help='Clipping gradients maximum L2 norm.')
     parser.add_argument('--rnn-type', help='RNN cell units type.', choices=['Vanilla', 'LSTM', 'GRU'], default='LSTM')
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument('--emb-fn', default='../oya-nepali-nlp/data/nep2vec/nep2vec_text_stem', help='Path to word embeddings file.')
     parser.add_argument('--emb-dim', type=int, default=300, help='Dimension of word embeddings file.')
     parser.add_argument('--emb-delimiter', default=' ', help='Delimiter for word embeddings file.')
-    parser.add_argument('--emb-load-all', type=str2bool, default=True, help='Load all embeddings to model.', nargs='?',
+    parser.add_argument('--emb-load-all', type=str2bool, default=False, help='Load all embeddings to model.', nargs='?',
                         choices = ['yes', True, 'no (default)', False])
     parser.add_argument('--freeze-word-embeddings', type=str2bool, default=False,
                         help='False to continue training the word embeddings.', nargs='?',
