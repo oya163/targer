@@ -32,7 +32,7 @@ class DataIOConnlNer2003():
                     curr_words = list()
                     curr_tags = list()
                 continue
-            strings = line.split(' ')
+            strings = line.split('\t')
             word = strings[0]
             tag = strings[column_no] # be default, we take the last tag
             curr_words.append(word)
